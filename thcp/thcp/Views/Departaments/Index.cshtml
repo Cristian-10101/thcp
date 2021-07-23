@@ -1,28 +1,41 @@
-﻿@model IEnumerable<thcp.Models.Departament> 
-   @{ 
-       ViewData["Title"] = "Departamento";
-   }
+﻿@model thcp.Common.Pagination<Departament>
+@{
+    ViewData["Title"] = "Departamento";
+}
 <h2>Lista de Depatamentos</h2>
-<p>
-    <a asp-action="Create" class="btn btn-success">Nuevo </a>
-</p>
-    <table class="table">
+
+<div class="row search">
+    <div class="col-auto">
+        <input type="text" class="form-control-plaintext" id="txt-search" placeholder="Buscar..." />
+    </div>
+    <div class="col-auto">
+        <a class="btn btn-success" onclick="departments_search()" id="search-link"><i class="fas fa-search"></i></a>
+        <a asp-action="Create" class="btn btn-success"><i class="far fa-file"></i> Nuevo</a>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table table-bordered table-hover">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.DepartamentName)
+                    @Html.DisplayNameFor(model => model.Result.SingleOrDefault().DepartamentId)
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Result)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.DepartamentName)</td>
+                        @Html.DisplayFor(modelItem => item.DepartamentName)
+                    </td>
                     <td>
-                        Borrar|Editar|Detalles
+                        <a asp-action="Edit" class=" btn btn-warning" asp-route-id="@item.DepartamentId"><i class="fas fa-edit"></i> Editar</a>
+                        <a asp-action="Details" class=" btn btn-success" asp-route-id="@item.DepartamentId"><i class="fas fa-info-circle"></i> Detalles</a>
+                        <a asp-action="Delete" class=" btn btn-danger" asp-route-id="@item.DepartamentId"><i class="fas fa-trash-alt"></i> Borrar</a>
+
                     </td>
                 </tr>
             }
@@ -30,3 +43,68 @@
 
 
     </table>
+</div>
+
+@*Codigo para paginar registros*@
+
+@if (Model.Result.Count() > 0)
+{
+    <span>
+        <strong>@Model.TotalRecords</strong> registros encontrados
+    </span>
+    <span> | </span>
+    <span>
+        Pagina <strong>@Model.CurrentPage</strong> de
+        <strong> @Model.TotalPage</strong>
+    </span>
+    <span>|</span>
+
+}
+else
+{
+    <span> No hay resultados para esta busqueda </span>
+    <span> | </span>
+}
+
+@if (Model.CurrentPage > 1)
+{
+    @Html.ActionLink("<<", "Index", new { Page = 1, Search = Model.Search },
+        new { @class = "btn btn-sm btn-default" })
+    <span></span>
+
+    @Html.ActionLink("Anterior", "Index", new { Page = Model.CurrentPage - 1, Search = Model.Search },
+        new { @class = "btn btn-sm btn-default" })
+}
+else
+{
+    @Html.ActionLink("<<", "Index", new { Page = 1, Search = Model.Search },
+      new { @class = "btn btn-sm btn-default disabled " })
+
+    @Html.ActionLink("Anterior", "Index", new { Page = 1, Search = Model.Search },
+      new { @class = "btn btn-sm btn-default disabled" })
+}
+
+<span></span>
+
+@if (Model.CurrentPage < Model.TotalPage)
+{
+    @Html.ActionLink("Siguiente", "Index", new { Page = Model.CurrentPage + 1, Search = Model.Search },
+      new { @class = "btn btn-sm btn-default" })
+
+    <span></span>
+
+    @Html.ActionLink(">>", "Index", new { Page = Model.TotalPage, Search = Model.Search },
+     new { @class = "btn btn-sm btn-default" })
+}
+else
+{
+    @Html.ActionLink("Siguiente", "Index", new { Page = Model.CurrentPage - 1, Search = Model.Search },
+     new { @class = "btn btn-sm btn-default disabled" })
+
+    <span></span>
+
+    @Html.ActionLink(">>", "Index", new { Page = Model.TotalPage, Search = Model.Search },
+     new { @class = "btn btn-sm btn-default disabled" })
+}
+<link rel="stylesheet" href="~/css/common.css" />
+<script src="~/js/Departaments.js" asp-append-version="true"></script>

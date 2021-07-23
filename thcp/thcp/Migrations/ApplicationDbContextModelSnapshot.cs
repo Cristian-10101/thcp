@@ -3,22 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using thcp.Data;
 
-namespace thcp.Data.Migrations
+namespace thcp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210607205123_AddDepartaments")]
-    partial class AddDepartaments
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.6")
+                .HasAnnotation("ProductVersion", "5.0.8")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -221,6 +219,51 @@ namespace thcp.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("thcp.Models.Deduction", b =>
+                {
+                    b.Property<int>("DeductionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DeductionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("MeasureId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(12,2)");
+
+                    b.HasKey("DeductionId");
+
+                    b.HasIndex("DeductionTypeId");
+
+                    b.HasIndex("MeasureId");
+
+                    b.ToTable("Deductions");
+                });
+
+            modelBuilder.Entity("thcp.Models.DeductionType", b =>
+                {
+                    b.Property<int>("DeductionTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("DeductionTypeId");
+
+                    b.ToTable("DeductionTypes");
+                });
+
             modelBuilder.Entity("thcp.Models.Departament", b =>
                 {
                     b.Property<int>("DepartamentId")
@@ -229,11 +272,134 @@ namespace thcp.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("DepartamentName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
 
                     b.HasKey("DepartamentId");
 
                     b.ToTable("Departaments");
+                });
+
+            modelBuilder.Entity("thcp.Models.Employee", b =>
+                {
+                    b.Property<int>("EmployeeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("BirthDay")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Indentity")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("PositionId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Salary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("EmployeeId");
+
+                    b.HasIndex("PositionId");
+
+                    b.ToTable("Employee");
+                });
+
+            modelBuilder.Entity("thcp.Models.Measure", b =>
+                {
+                    b.Property<int>("MeasureId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Symbol")
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.HasKey("MeasureId");
+
+                    b.ToTable("Measures");
+                });
+
+            modelBuilder.Entity("thcp.Models.Perception", b =>
+                {
+                    b.Property<int>("PerceptionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("MeasureId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PerceptionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(12,2)");
+
+                    b.HasKey("PerceptionId");
+
+                    b.HasIndex("MeasureId");
+
+                    b.HasIndex("PerceptionTypeId");
+
+                    b.ToTable("Perceptions");
+                });
+
+            modelBuilder.Entity("thcp.Models.PerceptionType", b =>
+                {
+                    b.Property<int>("PerceptionTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.HasKey("PerceptionTypeId");
+
+                    b.ToTable("PerceptionTypes");
+                });
+
+            modelBuilder.Entity("thcp.Models.Position", b =>
+                {
+                    b.Property<int>("PositionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DepartamentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.HasKey("PositionId");
+
+                    b.HasIndex("DepartamentId");
+
+                    b.ToTable("Position");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -285,6 +451,93 @@ namespace thcp.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("thcp.Models.Deduction", b =>
+                {
+                    b.HasOne("thcp.Models.DeductionType", "DeductionType")
+                        .WithMany("Deductions")
+                        .HasForeignKey("DeductionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("thcp.Models.Measure", "Measure")
+                        .WithMany("Deductions")
+                        .HasForeignKey("MeasureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeductionType");
+
+                    b.Navigation("Measure");
+                });
+
+            modelBuilder.Entity("thcp.Models.Employee", b =>
+                {
+                    b.HasOne("thcp.Models.Position", "Position")
+                        .WithMany("Employees")
+                        .HasForeignKey("PositionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Position");
+                });
+
+            modelBuilder.Entity("thcp.Models.Perception", b =>
+                {
+                    b.HasOne("thcp.Models.Measure", "Measure")
+                        .WithMany("Perceptions")
+                        .HasForeignKey("MeasureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("thcp.Models.PerceptionType", "PerceptionType")
+                        .WithMany("Perceptions")
+                        .HasForeignKey("PerceptionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Measure");
+
+                    b.Navigation("PerceptionType");
+                });
+
+            modelBuilder.Entity("thcp.Models.Position", b =>
+                {
+                    b.HasOne("thcp.Models.Departament", "Departament")
+                        .WithMany("Employees")
+                        .HasForeignKey("DepartamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Departament");
+                });
+
+            modelBuilder.Entity("thcp.Models.DeductionType", b =>
+                {
+                    b.Navigation("Deductions");
+                });
+
+            modelBuilder.Entity("thcp.Models.Departament", b =>
+                {
+                    b.Navigation("Employees");
+                });
+
+            modelBuilder.Entity("thcp.Models.Measure", b =>
+                {
+                    b.Navigation("Deductions");
+
+                    b.Navigation("Perceptions");
+                });
+
+            modelBuilder.Entity("thcp.Models.PerceptionType", b =>
+                {
+                    b.Navigation("Perceptions");
+                });
+
+            modelBuilder.Entity("thcp.Models.Position", b =>
+                {
+                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }
